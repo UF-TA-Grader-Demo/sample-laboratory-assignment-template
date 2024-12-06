@@ -1,0 +1,6 @@
+﻿StudentID,Name,Age,Gender,Score,Major,CreditHours
+1,John Smith,20,M,85,Computer Science,15
+2,Jane Doe,22,F,90,Computer Engineering,18
+3,Bob Johnson,,M,72,Physics,
+4,Alice Bell,19,F,,Biology,12
+5,Charlie Brown,21,M,88,Mathematics,15
