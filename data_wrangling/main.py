@@ -1,40 +1,79 @@
+```
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
+import os
 
 def read_data(file_path):
-    return pd.read_csv(file_path)
+    """
+    Reads the CSV file and returns a Pandas DataFrame.
+    
+    Parameters:
+    file_path (str): The path to the CSV file.
+
+    Returns:
+    DataFrame: The data loaded into a DataFrame.
+    """
 
 def fill_missing_values(df):
-    df['Age'].fillna(df['Age'].mean(), inplace=True)
-    df['Score'].fillna(df['Score'].median(), inplace=True)
-    df.dropna(subset=['Name'], inplace=True)
-    return df
+    """
+    Fills missing values in the DataFrame.
+
+    - Fills the 'Age' column with the mean age.
+    - Fills the 'Score' column with the median score.
+    - Drops rows with missing 'Name' values.
+
+    Parameters:
+    df (DataFrame): The input DataFrame.
+
+    Returns:
+    DataFrame: The cleaned DataFrame.
+    """
+   
 
 def normalize_score(df):
-    df['Score'] = (df['Score'] - df['Score'].min()) / (df['Score'].max() - df['Score'].min())
-    return df
+    """
+    Normalizes the 'Score' column to a range of [0, 1].
+
+    Parameters:
+    df (DataFrame): The input DataFrame.
+
+    Returns:
+    DataFrame: The DataFrame with normalized 'Score'.
+    """
 
 def create_visualizations(df):
-    df['Age'].plot(kind='hist', title='Age Histogram')
-    plt.savefig('age_histogram.png')
-    plt.clf()
+    """
+    Creates and saves visualizations from the DataFrame.
 
-    df.plot(kind='scatter', x='Age', y='Score', title='Age vs Score')
-    plt.savefig('age_score_scatter.png')
-    plt.clf()
+    - A histogram of the 'Age' column.
+    - A scatter plot of 'Age' vs 'Score'.
+    - A correlation matrix heatmap.
 
-    correlation_matrix = df.corr()
-    plt.matshow(correlation_matrix)
-    plt.xticks(range(len(correlation_matrix.columns)), correlation_matrix.columns)
-    plt.yticks(range(len(correlation_matrix.columns)), correlation_matrix.columns)
-    plt.colorbar()
-    plt.savefig('correlation_matrix.png')
+    Parameters:
+    df (DataFrame): The input DataFrame.
+    """
 
+def main(file_path):
+    """
+    Main function to run the data wrangling tasks.
 
-if __name__ == '__main__':
-    file_path = 'students_data.csv'
+    Parameters:
+    file_path (str): The path to the CSV file.
+    """
     df = read_data(file_path)
     df = fill_missing_values(df)
     df = normalize_score(df)
     create_visualizations(df)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Data Wrangling with Student Data')
+    parser.add_argument('file_path', type=str, help='Path to the students_data.csv file')
+    args = parser.parse_args()
+    
+    if os.path.exists(args.file_path):
+        main(args.file_path)
+    else:
+        print(f"File {args.file_path} does not exist.")
+```
