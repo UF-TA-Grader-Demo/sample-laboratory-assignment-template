@@ -1,79 +1,53 @@
-```
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import argparse
-import os
 
+# Function to read data from a CSV file
 def read_data(file_path):
-    """
-    Reads the CSV file and returns a Pandas DataFrame.
-    
-    Parameters:
-    file_path (str): The path to the CSV file.
-
-    Returns:
-    DataFrame: The data loaded into a DataFrame.
-    """
-
+    return pd.read_csv(file_path)
+  
+# Function to fill missing values in the DataFrame
 def fill_missing_values(df):
-    """
-    Fills missing values in the DataFrame.
-
-    - Fills the 'Age' column with the mean age.
-    - Fills the 'Score' column with the median score.
-    - Drops rows with missing 'Name' values.
-
-    Parameters:
-    df (DataFrame): The input DataFrame.
-
-    Returns:
-    DataFrame: The cleaned DataFrame.
-    """
-   
-
+    df_copy = df.copy()
+    df_copy['Age'] = df_copy['Age'].fillna(df_copy['Age'].mean())
+    df_copy['Score'] = df_copy['Score'].fillna(df_copy['Score'].median())
+    df_copy.dropna(subset=['Name'], inplace=True)
+    return df_copy
+  
+# Function to normalize the 'Score' column in the DataFrame
 def normalize_score(df):
-    """
-    Normalizes the 'Score' column to a range of [0, 1].
-
-    Parameters:
-    df (DataFrame): The input DataFrame.
-
-    Returns:
-    DataFrame: The DataFrame with normalized 'Score'.
-    """
-
+    df_copy = df.copy()
+    df_copy['Score'] = (df_copy['Score'] - df_copy['Score'].min()) / (df_copy['Score'].max() - df_copy['Score'].min())
+    return df_copy
+  
+# Function to create visualizations from the DataFrame
 def create_visualizations(df):
-    """
-    Creates and saves visualizations from the DataFrame.
+    df_copy = df.copy()
 
-    - A histogram of the 'Age' column.
-    - A scatter plot of 'Age' vs 'Score'.
-    - A correlation matrix heatmap.
+    df_copy['Age'].plot(kind='hist', title='Age Histogram')
+    plt.savefig('age_histogram.png')
+    plt.show()
+    plt.clf()
 
-    Parameters:
-    df (DataFrame): The input DataFrame.
-    """
+    df_copy.plot(kind='scatter', x='Age', y='Score', title='Age vs Score')
+    plt.savefig('age_score_scatter.png')
+    plt.show()
+    plt.clf()
 
-def main(file_path):
-    """
-    Main function to run the data wrangling tasks.
+    # Select only numeric columns for correlation matrix
+    numeric_cols = df_copy.select_dtypes(include=[np.number])
+    correlation_matrix = numeric_cols.corr()
 
-    Parameters:
-    file_path (str): The path to the CSV file.
-    """
+    plt.matshow(correlation_matrix)
+    plt.xticks(range(len(correlation_matrix.columns)), correlation_matrix.columns, rotation=90)
+    plt.yticks(range(len(correlation_matrix.columns)), correlation_matrix.columns)
+    plt.colorbar()
+    plt.savefig('correlation_matrix.png')
+    plt.show()
+  
+if __name__ == '__main__':
+    file_path = 'students_data.csv'
     df = read_data(file_path)
     df = fill_missing_values(df)
     df = normalize_score(df)
     create_visualizations(df)
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Data Wrangling with Student Data')
-    parser.add_argument('file_path', type=str, help='Path to the students_data.csv file')
-    args = parser.parse_args()
-    
-    if os.path.exists(args.file_path):
-        main(args.file_path)
-    else:
-        print(f"File {args.file_path} does not exist.")
-```
