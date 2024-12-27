@@ -174,7 +174,7 @@ We have provided test cases to evaluate your submission automatically. The tests
 
 2. **Run Tests**
     ```bash
-    pytest
+    pyhton -m pytest
     ```
 ## Collaborators
 This file should contain a pipe-separated list describing who you worked with and a small text description describing the nature of the collaboration. If you visited a website for inspiration, including the website. This information should be listed in three fields as in the example is below:
