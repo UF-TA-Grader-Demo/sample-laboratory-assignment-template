@@ -6,7 +6,7 @@ def sample_data():
     return read_data('students_data.csv')
 
 def test_read_csv(sample_data):
-    assert list(sample_data.columns) == ['StudentID', 'Name', 'Age', 'Gender', 'Score', 'Major', '[REDACTED]']
+    assert list(sample_data.columns) == ['StudentID', 'Name', 'Age', 'Gender', 'Score', 'Major', 'CreditHours']
 
 def test_fill_missing_values(sample_data):
     df_cleaned = fill_missing_values(sample_data)
